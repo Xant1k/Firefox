@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name		MemoryMonitorMod.uc.js
+// @name		Memory Monitor mod.uc.js
 // @description		Simple Memory Monitor
 // @include		main
 // @charset		UTF-8
