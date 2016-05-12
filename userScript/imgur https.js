@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name		Imgur https
+// @name		imgur https
 // @description		imgur automated http to https
 // @include		http://imgur.com/*
 // @include		http://i.imgur.com/*
