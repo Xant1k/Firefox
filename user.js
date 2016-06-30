@@ -1459,3 +1459,117 @@ user_pref("browser.aboutHomeSnippets.updateUrl", "");
     // I'm not talking about meaningless synthetic benchmark results here. 
     // As seen in reality, on sites like Tweetdeck - which barely works in Firefox, compared to Vivaldi, Chromium, or even IE11.
     // Most info found is outdated, the prefs don't exist anymore (eg. javascript.options.methodjit), or there is contradictory evidence about their usefulness.
+
+
+Tor Browser Bundle about:config Null Advisory;
+
+- https://tornull.org/tbbnull.php
+
+
+How to EDIT the Tor Browser Bundle about:config - http://kb.mozillazine.org/About:config
+
+
+network.http.sendRefererHeader ; 1 - http://kb.mozillazine.org/Network.http.sendRefererHeader
+
+browser.sessionhistory.max_entries ; 2
+
+dom.storage.enabled ; false - http://kb.mozillazine.org/Dom.storage.enabled
+
+dom.vibrator.enabled ; false
+
+webgl.disabled ; true
+
+browser.cache.memory.enable ; false - http://kb.mozillazine.org/Browser.cache.memory.enable
+
+network.http.use-cache ; false - http://kb.mozillazine.org/Network.http.use-cache
+
+browser.cache.disk.capacity ; 0
+
+browser.cache.offline.capacity ; 0
+
+browser.cache.disk_cache_ssl ; false - http://kb.mozillazine.org/Browser.cache.disk_cache_ssl
+
+places.history.enabled ; false
+
+network.prefetch-next ; false - http://kb.mozillazine.org/Network.prefetch-next
+
+browser.send_pings.require_same_host ; true - http://kb.mozillazine.org/Browser.send_pings.require_same_host
+
+browser.send_pings.max_per_link ; 0
+
+beacon.enabled ; false
+
+clipboard.autocopy ; false - http://kb.mozillazine.org/Clipboard.autocopy
+
+dom.event.clipboardevents.enabled ; false - https://developer.mozilla.org/en-US/docs/Mozilla/Preferences/Preference_reference/dom.event.clipboardevents.enabled
+
+layout.css.visited_links_enabled ; false - https://blog.mozilla.org/security/2010/03/31/plugging-the-css-history-leak/
+
+browser.sessionhistory.max_total_viewers ; 0 - http://kb.mozillazine.org/Browser.sessionhistory.max_total_viewers
+
+
+How to Stop Firefox making Automatic Connections - https://support.mozilla.org/en-US/kb/how-stop-firefox-making-automatic-connections
+
+browser.newtabpage.directory.ping ; set a blank string
+
+browser.newtabpage.directory.source ; set a blank string
+
+browser.aboutHomeSnippets.updateUrl ; set a blank string
+
+browser.startup.homepage_override.mstone ; ignore
+
+browser.selfsupport.url ; set a blank string
+
+
+Additional (optional) :
+
+extensions.blocklist.enabled ; false
+
+experiments.enabled ; false
+
+experiments.supported ; false
+
+network.allow-experiments ; false
+
+
+How to fully disable Google 'Safe' Browsing and Reporting - http://kb.mozillazine.org/Browser.safebrowsing.enabled
+
+browser.safebrowsing.appRepURL ; set a blank string
+
+browser.safebrowsing.downloads.enabled ; false
+
+browser.safebrowsing.gethashURL ; set a blank string
+
+browser.safebrowsing.malware.reportURL ; set a blank string
+
+browser.safebrowsing.reportErrorURL ; set a blank string
+
+browser.safebrowsing.reportGenericURL ; set a blank string
+
+browser.safebrowsing.reportMalwareErrorURL ; set a blank string
+
+browser.safebrowsing.reportMalwareURL ; set a blank string
+
+browser.safebrowsing.reportPhishURL ; set a blank string
+
+browser.safebrowsing.reportURL ; set a blank string
+
+browser.safebrowsing.updateURL ; set a blank string
+
+services.sync.prefs.sync.browser.safebrowsing.enabled ; false
+
+services.sync.prefs.sync.browser.safebrowsing.malware.enabled ; false
+
+
+Pipelining Optimizations :
+
+network.http.pipelining.maxrequests ; 32
+
+network.http.pipelining.max-optimistic-requests ; 8
+
+
+Tab Optimizations :
+
+browser.tabs.animate ; false
+
+browser.panorama.animate_zoom ; false
