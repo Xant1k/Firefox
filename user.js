@@ -310,6 +310,10 @@ user_pref("plugin.allowed_types", " "); // Именно пробел, а не п
 /* Запрет javascript-ам обращаться к плагинам. */
 user_pref("security.xpconnect.plugin.unrestricted", false);
 user_pref("application.use_ns_plugin_finder", false);
+
+Отключает замену <embed> на <iframe> в страницах, встраивающих видео с YouTube. Такая замена
+ +// позволяет использовать HTML5-проигрыватель вместо Flash на видео, встроенных по старому образцу.
+ +// https://bugzilla.mozilla.org/show_bug.cgi?id=769117
 +user_pref("plugins.rewrite_youtube_embeds", false); разве это не хорошо?
 Эта штука автоматом конвертирует старый код встраивания на сторонних сайтах YouTube-видео (флешевый) в новый (HTML5).
 Наоборот же, если её включить, уменьшается число сайтов, которые требуют непременно Flash,
@@ -808,6 +812,11 @@ user_pref("gfx.downloadable_fonts.woff2.enabled", false);
 1 = принимать cookies только с посещаемых сайтов (не рекомендуется!)
 Если ипользуется значение 1 (принимать cookies только с посещаемых сайтов), то необходимо включить опцию очистки cookies при закрытии браузера:
 network.cookie.lifetimePolicy = 2 // Хранение cookies только на время сессии.
++// Удалять cookies после выхода из браузера.
+ +// Preferences -> Privacy -> Accept cookies from sites -> Keep until: I close Firefox
+ +// http://kb.mozillazine.org/Network.cookie.lifetimePolicy
+ +user_pref("network.cookie.lifetimePolicy", 2);
+ 
 // Хранение Cookies не более суток.
 network.cookie.lifetime.days = 1
 Determines the number of days to keep cookies if network.cookie.lifetimePolicy is 3. Default value is 90.
@@ -818,10 +827,23 @@ network.cookie.cookieBehavior=2 (рекомендовано)
 http://kb.mozillazine.org/Network.cookie.cookieBehavior
 Прием cookie только с посещаемого (оригинального) сайта. Cookie со сторонних (third-party) серверов будут блокироваться:
 
++// Запрещает cookies полностью. Ломает многие сайты, поэтому рекомендуется не отключать полностью, а
+ +// контролировать и чистить соответствующими аддонами.
+ +// Preferences -> Privacy -> Accept cookies from sites
+ +// http://kb.mozillazine.org/Network.cookie.cookieBehavior
+ +// https://hg.mozilla.org/releases/mozilla-release/file/3dcde73ca237dd579e1599f635f3cc994afc1346/modules/libpref/init/all.js#l1886
+ +user_pref("network.cookie.cookieBehavior", 2);
+
 network.cookie.cookieBehavior=1 (не рекомендуется)
 Примечание: В последнем случае (=1) необходимо активировать опцию устаревания загруженных cookies при закрытии браузера:
 network.cookie.lifetimePolicy=2
 http://kb.mozillazine.org/Network.cookie.lifetimePolicy
+
++// Запрещает 3rd-party cookies.
+ +// Preferences -> Privacy -> Accept cookies from sites -> Accept third-party cookies: Never
+ +// http://kb.mozillazine.org/Network.cookie.cookieBehavior
+ +// https://hg.mozilla.org/releases/mozilla-release/file/3dcde73ca237dd579e1599f635f3cc994afc1346/modules/libpref/init/all.js#l1886
+ +user_pref("network.cookie.cookieBehavior", 1);
 
 /* Объем RAM-кэша (кэш браузера который храниться в памяти) в килобайтах. */
 user_pref("browser.cache.memory.capacity", 524288);
@@ -1522,6 +1544,10 @@ network.http.sendRefererHeader ; 1 - http://kb.mozillazine.org/Network.http.send
 browser.sessionhistory.max_entries ; 2
 
 dom.storage.enabled ; false - http://kb.mozillazine.org/Dom.storage.enabled
+// Отключает DOM Storage. Ломает многие сайты, поэтому рекомендуется не отключать полностью, а
+ +// контролировать и чистить соответствующими аддонами.
+ +user_pref("dom.storage.enabled", false);
+ 
 
 dom.vibrator.enabled ; false
 
@@ -1657,5 +1683,51 @@ security.ssl.require_safe_negotiation` -- ломается Instagram, многи
  +// https://bugzilla.mozilla.org/show_bug.cgi?id=518805
  +// https://hg.mozilla.org/releases/mozilla-release/file/b0310cb90fd0/mobile/android/app/mobile.js#l623
  +user_pref("browser.meta_refresh_when_inactive.disabled", true);
+ 
+ 
+// Запрещает все сертификаты, использующие SHA1.
+ +// 0 = allow SHA-1; 1 = forbid SHA-1; 2 = allow SHA-1 only if notBefore < 2016-01-01
+ +// http://www.scmagazine.com/mozilla-pulls-back-on-rejecting-sha-1-certs-outright/article/463913/
+ +user_pref("security.pki.sha1_enforcement_level", 1);
+ +user_pref("security.pki.sha1_enforcement_level", 2);
+ 
+ // Устанавливает HTTP-заголовок Accept-Language, а также DOM-свойств window.navigator.languages
+ // и window.navigator.language в дефолтные для en-US локали значения. Q-values указывать не нужно -
+ // они вычисляются автоматически, а если заданы - игнорируются.
+ // https://tools.ietf.org/html/rfc2616#section-14.4
+ // https://hg.mozilla.org/releases/mozilla-esr38/file/008aa6494f90/netwerk/protocol/http/nsHttpHandler.cpp#l1345
+ // https://hg.mozilla.org/releases/mozilla-esr38/file/231a8c61b49f/modules/libpref/nsPrefBranch.cpp#l213
+ // https://hg.mozilla.org/releases/mozilla-esr38/file/008aa6494f90/netwerk/protocol/http/nsHttpHandler.cpp#l1573
+ user_pref("intl.accept_languages", "en-US, en");
+ // Вопреки своему названию и устаревшей информации в KB MozillaZine, general.useragent.locale уже
+ // не влияет на Accept-Language[1], а в основном передается в служебных URL из about:config,
+ // куда ее значение подставляется вместо %LOCALE%. Но кроме этого оно еще ошибочно используется
+ // в запросах некоторых поисковых движков[2][3] и, возможно, где-то еще, так что проще будет
+ // изначально установить именно en-US билд Firefox.
+ // [1]: https://bugzilla.mozilla.org/show_bug.cgi?id=448743#c5
+ // [2]: https://bugzilla.mozilla.org/show_bug.cgi?id=670450
+ // [3]: https://bugzilla.mozilla.org/show_bug.cgi?id=670451
+  user_pref("general.useragent.locale", "en-US");
+  // Использовать локаль из general.useragent.locale, а не установленную в ОС.
+  user_pref("intl.locale.matchOS", false);
+ +// Отключает возможность определения локали через Date.toLocaleString() - будет использоваться
+ +// всегда американская. Применяется только после перезапуска браузера. Проверить можно так:
+ +// LANG=ru_RU.UTF-8 firefox
+ +// (new Date(Date.now())).toLocaleString()
+ +// https://bugzilla.mozilla.org/show_bug.cgi?id=867501
+ +user_pref("javascript.use_us_english_locale", true);
+  
+  
+  +// Включает спуфинг различных свойств, как DOM, так и CSS, по которым можно фингерпринтить
+ +// пользователя (screenX, screenY, screen.width, screen.height, etc - полный список см. в исходниках
+ +// тестов по ссылкам ниже).
+ +// https://bugzilla.mozilla.org/show_bug.cgi?id=418986
+ +// https://hg.mozilla.org/releases/mozilla-release/file/3dcde73ca237dd579e1599f635f3cc994afc1346/dom/base/test/chrome/bug418986-1.js
+ +// https://hg.mozilla.org/releases/mozilla-release/file/3dcde73ca237dd579e1599f635f3cc994afc1346/layout/style/test/chrome/bug418986-2.js
+ +// https://hg.mozilla.org/releases/mozilla-release/file/3dcde73ca237dd579e1599f635f3cc994afc1346/dom/events/test/bug418986-3.js
+ +user_pref("privacy.resistFingerprinting", true);
+ 
+ +// Запрещает проигрывание HTML5-медиа в фоновой вкладке до первого переключения на нее.
+ +user_pref("media.block-play-until-visible", true);
  
  
