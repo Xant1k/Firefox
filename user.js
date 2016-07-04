@@ -1573,3 +1573,7 @@ Tab Optimizations :
 browser.tabs.animate ; false
 
 browser.panorama.animate_zoom ; false
+
+
+
+security.ssl.require_safe_negotiation` -- ломается Instagram, многие другие
