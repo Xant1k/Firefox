@@ -232,6 +232,19 @@ user_pref("loop.feedback.manualFormURL", "");
 user_pref("loop.linkClicker.url", "");
 user_pref("loop.facebook.shareUrl", "");
 user_pref("loop.CSP", "");
++user_pref("loop.facebook.appId", "");
+ +user_pref("loop.facebook.enabled", false);
+ +user_pref("loop.facebook.fallbackUrl", "");
+ +user_pref("loop.conversationPopOut.enabled", false);
+ +// Отключает отправку в Google Analytics доменов тех ссылок, которые были заданы в теме дискуссии
+ +// при создании room в Hello ("context URL"[1]). Отправляются только домены из белого списка[2].
+ +// https://bugzilla.mozilla.org/show_bug.cgi?id=1211542
+ +// https://bugzilla.mozilla.org/show_bug.cgi?id=1261467
+ +// https://hg.mozilla.org/releases/mozilla-release/file/970d0cf1c5d9/browser/extensions/loop/chrome/content/modules/LoopRooms.jsm#l975
+ +// [1]: https://wiki.mozilla.org/Loop/Architecture/Context
+ +// [2]: https://hg.mozilla.org/releases/mozilla-release/file/4f87a2517f36/browser/extensions/loop/chrome/content/modules/DomainWhitelist.jsm#l17
+ +user_pref("loop.logDomains", false);
+
 
 /* Отключает показ текста пароля по клику на соответствующее поле ввода в попапе, предлагающем сохранить введенный пароль. */
 user_pref("signon.rememberSignons.visibilityToggle", false);
@@ -293,6 +306,11 @@ user_pref("plugin.allowed_types", " "); // Именно пробел, а не п
 /* Запрет javascript-ам обращаться к плагинам. */
 user_pref("security.xpconnect.plugin.unrestricted", false);
 user_pref("application.use_ns_plugin_finder", false);
++user_pref("plugins.rewrite_youtube_embeds", false); разве это не хорошо?
+Эта штука автоматом конвертирует старый код встраивания на сторонних сайтах YouTube-видео (флешевый) в новый (HTML5).
+Наоборот же, если её включить, уменьшается число сайтов, которые требуют непременно Flash,
+что приближает возможность полностью отказаться от плагинов.
+
 
 /* Отключает просмотр PDF средствами браузера. */
 user_pref("pdfjs.disabled", true);
@@ -438,6 +456,7 @@ user_pref("media.peerconnection.Identity.timeout", 1);
 user_pref("media.peerconnection.identity.enabled", false);
 user_pref("media.peerconnection.video.enabled", false);
 user_pref("media.peerconnection.video.h264_enabled", false);
++user_pref("media.peerconnection.simulcast", false);
 user_pref("media.peerconnection.turn.disable", true);
 user_pref("media.peerconnection.default_iceservers", "[]"); // или [{"url": "127.0.0.1"}]
 user_pref("media.peerconnection.use_document_iceservers", false);
@@ -619,6 +638,7 @@ user_pref("browser.trackingprotection.gethashURL", "");
 user_pref("browser.polaris.enabled", false);
 user_pref("privacy.trackingprotection.introURL", "");
 user_pref("privacy.trackingprotection.introCount", 1);
+user_pref("privacy.trackingprotection.ui.enabled", false);
 
 
 /* Отключает File Handle API, который используется совместно с Indexed DB или Device Storage и предоставляет доступ к более низкоуровневым файловым операциям. */
@@ -951,6 +971,7 @@ user_pref("media.wmf.low-latency.enabled", false);
 user_pref("media.directshow.enabled", false);
 user_pref("media.ffmpeg.enabled", false);
 user_pref("media.gmp.decoder.enabled", false);
++user_pref("media.ffvpx.enabled", false);
 
 // Отключает переход по URL при нажатии на соответствующие элементы управления:
 // Preferences -> Search -> Add more search engines...
@@ -1322,10 +1343,12 @@ user_pref("accessibility.typeaheadfind.flashBar", 0); // http://kb.mozillazine.o
 // user_pref("font.name.serif.x-unicode", "Georgia");
 // user_pref("font.name.serif.x-western", "Georgia");
 
-// Disable EME, Adobe "Primetime Content Decryption Module" DRM malware:
-    // http://techdows.com/2015/04/how-to-uninstall-or-remove-adobe-primetime-decryption-module-plugin-from-firefox-38.html
-    // Additionally, you might want to delete all traces of "gmp-eme" from your Firefox profile folder.
-    // Or simply use "EME-free" builds of Firefox (Windows only): https://ftp.mozilla.org/pub/firefox/releases/latest/win32-EME-free/en-US/
+
+Отключает поддержку Encrypted Media Extensions (DRM для HTML5-видео).
+Disable EME, Adobe "Primetime Content Decryption Module" DRM malware:
+http://techdows.com/2015/04/how-to-uninstall-or-remove-adobe-primetime-decryption-module-plugin-from-firefox-38.html
+Additionally, you might want to delete all traces of "gmp-eme" from your Firefox profile folder.
+Or simply use "EME-free" builds of Firefox (Windows only): https://ftp.mozilla.org/pub/firefox/releases/latest/win32-EME-free/en-US/
 user_pref("media.gmp-eme-adobe.autoupdate", false);
 user_pref("media.gmp-eme-adobe.enabled", false);
 user_pref("media.eme.apiVisible", false);
@@ -1532,48 +1555,37 @@ experiments.supported ; false
 network.allow-experiments ; false
 
 
-How to fully disable Google 'Safe' Browsing and Reporting - http://kb.mozillazine.org/Browser.safebrowsing.enabled
-
-browser.safebrowsing.appRepURL ; set a blank string
-
-browser.safebrowsing.downloads.enabled ; false
-
-browser.safebrowsing.gethashURL ; set a blank string
-
-browser.safebrowsing.malware.reportURL ; set a blank string
-
-browser.safebrowsing.reportErrorURL ; set a blank string
-
-browser.safebrowsing.reportGenericURL ; set a blank string
-
-browser.safebrowsing.reportMalwareErrorURL ; set a blank string
-
-browser.safebrowsing.reportMalwareURL ; set a blank string
-
-browser.safebrowsing.reportPhishURL ; set a blank string
-
-browser.safebrowsing.reportURL ; set a blank string
-
-browser.safebrowsing.updateURL ; set a blank string
-
-services.sync.prefs.sync.browser.safebrowsing.enabled ; false
-
-services.sync.prefs.sync.browser.safebrowsing.malware.enabled ; false
-
-
-Pipelining Optimizations :
-
-network.http.pipelining.maxrequests ; 32
-
-network.http.pipelining.max-optimistic-requests ; 8
-
-
 Tab Optimizations :
-
 browser.tabs.animate ; false
-
 browser.panorama.animate_zoom ; false
 
 
-
 security.ssl.require_safe_negotiation` -- ломается Instagram, многие другие
+
+// Отключает список сайтов, запрещенных в режиме ограниченного профиля / родительского контроля.
+ +// https://bugzilla.mozilla.org/show_bug.cgi?id=1216723
+ +// https://bugzilla.mozilla.org/show_bug.cgi?id=1222377
+ +user_pref("browser.safebrowsing.forbiddenURIs.enabled", false);
+ +user_pref("urlclassifier.forbiddenTable", "");
+ 
+ // Отключает модуль LaterRun, предназначенный для показа новым пользователям различной справочной
+ +// информации при энном запуске браузера.
+ +user_pref("browser.laterrun.enabled", false);
+ 
+ 
+ / Отключает интегрированную поддержку проприетарного сервиса закладок Pocket.
+ // http://www.opennet.ru/opennews/art.shtml?num=42245
+ // https://wiki.mozilla.org/QA/Pocket_integration
+ user_pref("browser.pocket.enabled", false);
+ user_pref("browser.pocket.api", "");
+  user_pref("browser.pocket.site", "");
+  user_pref("browser.pocket.oAuthConsumerKey", "");
+  user_pref("browser.pocket.enabledLocales", "");
+ +// Начиная с Firefox 46 перемещено в системный аддон.
+
+ +user_pref("extensions.pocket.enabled", false);
+ +user_pref("extensions.pocket.api", "");
+ +user_pref("extensions.pocket.site", "");
+ +user_pref("extensions.pocket.oAuthConsumerKey", "");
+ 
+ 
