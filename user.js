@@ -244,7 +244,11 @@ user_pref("loop.CSP", "");
  +// [1]: https://wiki.mozilla.org/Loop/Architecture/Context
  +// [2]: https://hg.mozilla.org/releases/mozilla-release/file/4f87a2517f36/browser/extensions/loop/chrome/content/modules/DomainWhitelist.jsm#l17
  +user_pref("loop.logDomains", false);
-
+ +user_pref("loop.copy.showLimit", 0);
+ +user_pref("loop.copy.shown", true);
+ +user_pref("loop.copy.throttler", "");
+ +user_pref("loop.copy.ticket", 255);
+ 
 
 /* Отключает показ текста пароля по клику на соответствующее поле ввода в попапе, предлагающем сохранить введенный пароль. */
 user_pref("signon.rememberSignons.visibilityToggle", false);
@@ -344,6 +348,12 @@ user_pref("reader.parse-on-load.force-enabled", false);
 user_pref("reader.errors.includeURLs", false);
 /* При каждом изменении window.location значение сравнивается с этой настройкой, чтобы начать UI-тур по режиму чтения. Значение этого параметра используется как регэксп без проверки на пустую строку, поэтому обнулять его нельзя. Вместо этого можно использовать регэксп, возвращающий для любой строки false. */
 user_pref("browser.uitour.readerViewTrigger", ".^");
+
+// Отключает функцию зачитывания текста при помощи синтезированной речи в Reader View.
+ +// https://bugzilla.mozilla.org/show_bug.cgi?id=1166365
+ +// https://wiki.mozilla.org/QA/Speak_the_article
+ +// https://hg.mozilla.org/releases/mozilla-release/file/b0310cb90fd0/toolkit/components/reader/AboutReader.jsm#l106
+ +user_pref("narrate.enabled", false);
 
 /* Отключает автоматическую отправку поисковику недопечатанного запроса по мере его набора, используемую для формирования поисковых подсказок. */
 user_pref("browser.search.suggest.enabled", false); // Отключение автоподстановки поисковых запросов в окне поиска.
@@ -733,8 +743,17 @@ user_pref("browser.history.allowPopState", false);
 user_pref("browser.history.allowPushState", false);
 user_pref("browser.history.allowReplaceState", false);
 user_pref("browser.history.maxStateObjectSize", 0);
++//
+ +// UPD: В Firefox 47 allow-префы были убраны -- https://bugzilla.mozilla.org/show_bug.cgi?id=1249542
+ +//      Также, начиная с 47 версии, обнуление maxStateObjectSize  вызывает неработоспособность
+ +//      переключения категорий в about:addons и about:preferences.
+  user_pref("browser.history.allowPopState", false);
+  user_pref("browser.history.allowPushState", false);
+  user_pref("browser.history.allowReplaceState", false);
+  
+  
 
-/*
+
 /* Отключает Indexed DB API, позволяющий скриптам хранить информацию в БД SQLite на компьютере пользователя. Объем Indexed DB может значительно превышать объем DOM Storage. "IndexedDB is completely disabled in private browsing mode." Проверить это  можно на примере из MDN, здесь: https://mdn.github.io/to-do-notifications/index.html
 В обычном окне пример покажет "Database initialised.", в приватном - "Error loading database.", плюс сообщения "TypeError: db is undefined" в консоли. Также в обычном окне использование Indexed DB сайтом можно увидеть через Page - Info Permissions (но не в about:permissions) -> Maintain Offline Storage и очистить там же. Block, равно как и Ask, почему-то не работает для отдельных сайтов. В about:permissions > All Sites, Block работает - при его выборе просто выставляется dom.indexedDB.enabled в false. Находится Indexed DB в профиле, по такому пути: storage/default/<домен>/idb/
 Использование Indexed DB включили в один из популярных фреймворков и эта настройка стала ломать все больше и больше сайтов. */
@@ -941,6 +960,10 @@ user_pref("javascript.options.asmjs", false);
 Настройки media.webaudio.enabled больше не существует, поэтому только так.
 user_pref("noscript.forbidMedia", true);
 
++// Отключает WebAssembly.
+ +// https://hacks.mozilla.org/2016/03/a-webassembly-milestone/
+ +user_pref("javascript.options.wasm", false);
+
 Третий уровень - отключение JIT-компилятора, SVG и обработку JavaScript только для HTTPS.
 user_pref("javascript.options.baselinejit", false);
 user_pref("gfx.font_rendering.graphite.enabled", false);
@@ -962,6 +985,7 @@ user_pref("media.opus.enabled", false);
 user_pref("media.webm.enabled", false);
 user_pref("media.raw.enabled", false);
 user_pref("media.wave.enabled", false);
+user_pref("media.wave.decoder.enabled", false);
 user_pref("media.apple.mp3.enabled", false);
 user_pref("media.apple.mp4.enabled", false);
 user_pref("media.windows-media-foundation.enabled", false);
@@ -971,7 +995,10 @@ user_pref("media.wmf.low-latency.enabled", false);
 user_pref("media.directshow.enabled", false);
 user_pref("media.ffmpeg.enabled", false);
 user_pref("media.gmp.decoder.enabled", false);
-+user_pref("media.ffvpx.enabled", false);
+user_pref("media.ffvpx.enabled", false);
+user_pref("media.hardware-video-decoding.enabled", false);
+user_pref("media.hardware-video-decoding.force-enabled", false);
+
 
 // Отключает переход по URL при нажатии на соответствующие элементы управления:
 // Preferences -> Search -> Add more search engines...
@@ -1403,12 +1430,10 @@ user_pref("dom.gamepad.enabled", false); // https://developer.mozilla.org/en-US/
 user_pref("dom.netinfo.enabled", false); // https://developer.mozilla.org/en-US/docs/Web/API/Network_Information_API
 user_pref("dom.telephony.enabled", false); // https://wiki.mozilla.org/WebAPI/Security/WebTelephony
 user_pref("dom.vibrator.enabled", false);
-user_pref("dom.vr.enabled", false); // https://developer.mozilla.org/en-US/Firefox/Releases/36#Interfaces.2FAPIs.2FDOM
-user_pref("dom.vr.oculus.enabled", false);
-user_pref("dom.vr.oculus050.enabled", false);
 user_pref("dom.webnotifications.enabled", false); // https://developer.mozilla.org/en-US/docs/Web/API/notification
 user_pref("dom.webnotifications.serviceworker.enabled", false); // https://developer.mozilla.org/en-US/docs/Web/API/notification
 user_pref("media.webspeech.recognition.enable", false); // https://wiki.mozilla.org/HTML5_Speech_API
+
 
 // Remove default feed content handlers:
     // http://kb.mozillazine.org/Browser.contentHandlers.types.*.uri
@@ -1587,5 +1612,50 @@ security.ssl.require_safe_negotiation` -- ломается Instagram, многи
  +user_pref("extensions.pocket.api", "");
  +user_pref("extensions.pocket.site", "");
  +user_pref("extensions.pocket.oAuthConsumerKey", "");
+ 
+ +// Отключает список Tracking Protection, содержащий адреса тех SWF с популярных сайтов, которые были
+ +// замечены в попытках получить список шрифтов или совершить другие подозрительные действия.
+ +// https://hg.mozilla.org/releases/mozilla-release/file/b0310cb90fd0/modules/libpref/init/all.js#l4965
+ +// https://bugzilla.mozilla.org/show_bug.cgi?id=1237198
+ +// https://bugzilla.mozilla.org/show_bug.cgi?id=1248813
+ +// https://github.com/mozilla-services/shavar-plugin-blocklist
+ +user_pref("browser.safebrowsing.blockedURIs.enabled", false);
+ +user_pref("urlclassifier.blockedTable", "");
+ 
+ // Отключает новую версию new tab page, которая будет подгружаться с сервера Мозиллы. [Фича еще не
+ +// готова и не включена по умолчанию.] Сделано это якобы для того, чтобы разработчики могли
+ +// экспериментировать с функциональностью этой страницы чаще чем происходят релизы браузера.
+ +// https://wiki.mozilla.org/TPE_SecEng/Content_Signing_for_Remote_New_Tab
+ +// https://github.com/mozilla/remote-newtab
+ +user_pref("browser.newtabpage.remote", false);
+ +user_pref("browser.newtabpage.remote.mode", "dev");
+ 
+ 
+ / Отключает периодическую загрузку списка вредоносных расширений с AMO.
+  // https://addons.mozilla.org/firefox/blocked/
+ // http://kb.mozillazine.org/Extensions.blocklist.enabled
+ // https://support.mozilla.org/en-US/kb/how-stop-firefox-making-automatic-connections#w_blocklist-updating
+ // UPD: Начиная с Firefox 43, blocklist содержит не только список вредоносных расширений, но и
+ // информацию об отозванных сертификатах, поэтому отключать его не рекомендуется.
+ // https://bugzilla.mozilla.org/show_bug.cgi?id=1016555
+ // https://wiki.mozilla.org/CA:RevocationPlan#OneCRL
+ // https://blog.mozilla.org/security/2015/03/03/revoking-intermediate-certificates-introducing-onecrl/
+ user_pref("extensions.blocklist.enabled", false);
+ user_pref("extensions.blocklist.url", "");
+  user_pref("extensions.blocklist.detailsURL", "");
+  user_pref("extensions.blocklist.itemURL", "");
+  
+ +// Начиная с Firefox 47, распространение blocklist и отозванных сертификатов постепенно переходит на
+ +// новый бэкэнд под названием Kinto.
+ +// https://wiki.mozilla.org/Firefox/Go_Faster#III:_Kinto
+ +// https://wiki.mozilla.org/Firefox/Kinto
+ +// https://hg.mozilla.org/releases/mozilla-release/file/b0310cb90fd0/services/common/KintoCertificateBlocklist.js
+ +user_pref("services.kinto.base", "");
+ 
+ 
+ +// Отключает <meta http-equiv="refresh"> в неактивных вкладках, оставляя разрешенным в активной.
+ +// https://bugzilla.mozilla.org/show_bug.cgi?id=518805
+ +// https://hg.mozilla.org/releases/mozilla-release/file/b0310cb90fd0/mobile/android/app/mobile.js#l623
+ +user_pref("browser.meta_refresh_when_inactive.disabled", true);
  
  
